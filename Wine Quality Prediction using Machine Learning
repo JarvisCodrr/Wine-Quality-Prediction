@@ -1,0 +1,30 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sb
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from sklearn import metrics
+from sklearn.linear_model import LinearRegression
+
+wine_quality = pd.read_csv('winequality.csv')
+
+X_train, X_test, y_train, y_test = train_test_split(wine_quality.drop('quality', axis=1), wine_quality['quality'], test_size=0.2)
+
+scaler = MinMaxScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+accuracy = metrics.accuracy_score(y_test, y_pred)
+print('Accuracy:', accuracy)
+
+plt.scatter(y_test, y_pred)
+plt.xlabel('Actual Quality')
+plt.ylabel('Predicted Quality')
+plt.title('Wine Quality Prediction')
+plt.show()
